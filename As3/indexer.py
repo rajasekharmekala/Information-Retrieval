@@ -27,10 +27,6 @@ class Indexer():
             documents.extend([os.path.join(root, path) for path in filter(lambda file: file.endswith(".json"), files ) ])
         self.update_index(documents)
 
-    def param(self, x):
-        print(x)
-        return True
-
     def get_doc_count(self):
         return self.doc_count
 
@@ -53,11 +49,12 @@ class Indexer():
                 self.logger.info("Error: Key doc_count already present in doc_hashmap")
             self.doc_hashmap[self.doc_count]=doc['url']
 
-            tokens = get_stemmed_tokens(doc['content'])
+            tokenFreq = get_stemmed_tokens(doc['content'])
             # total_doc_tokens = len(tokens)
-            self.logger.info(f"parsed {self.doc_count} docurl: {doc['url']} ------ token count: {len(tokens)} ")
+            if(self.doc_count %200 == 0):
+                self.logger.info(f"parsed {self.doc_count} docurl: {doc['url']} ------ no: of tokens : {len(tokenFreq)} ")
             # self.logger.info(f"{self.doc_count}")
-            for token, freq in tokens.items():    # For next assignments break here on size and save partial indexes and continue
+            for token, freq in tokenFreq.items():    # For next assignments break here on size and save partial indexes and continue
                 if token not in self.index:
                     self.index[token] = []
                 self.index[token].append((self.doc_count, freq))
