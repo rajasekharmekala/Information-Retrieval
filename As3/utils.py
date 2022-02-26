@@ -36,15 +36,17 @@ def is_tag_visible(element):
 def get_stemmed_tokens(html):
     soup = BeautifulSoup(html, 'html.parser')
     ps = PorterStemmer()
-    texts = soup.findAll(text=True)
-    visible_texts = filter(is_tag_visible, texts)  
-    vis_text = " ".join(t.strip() for t in visible_texts)
-    tokens = [ps.stem(word) for word in word_tokenize(vis_text)]
+    text = soup.get_text()
+    tokens = word_tokenize(text)
 
-    filtered_tokens = []
+    filtered_tokens = {}
     for token in tokens:
         token = re.sub(r'[^\x00-\x7F]+', '', token)
         token = token.lower()
-        if (re.match(r"[a-zA-Z0-9@#*&']", token)):
-            filtered_tokens.append(token)
+        token = ps.stem(token)
+        if re.match(r"[a-zA-Z0-9@#*&']{2,}", token):
+            if token in filtered_tokens:
+                filtered_tokens[token] += 1
+            else:
+                filtered_tokens[token] = 1
     return filtered_tokens

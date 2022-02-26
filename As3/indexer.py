@@ -5,32 +5,6 @@ import argparse
 from numpy import size
 from utils import get_logger, get_stemmed_tokens
 
-class Vocab:
-    def __init__(self, tokens = []):
-        self.vocab = {}
-    def build_vocab(self, tokens = []):
-        self.tokens = []
-        self.update_vocab(tokens)
-
-    def update_vocab(self, tokens = []):
-        for token in tokens:
-            self.vocab[token] = self.vocab.get(token, 0) +1
-    
-    # Method:        Map<Token,Count> computeWordFrequencies(List<Token>)
-    def computeWordFrequencies(self, tokens):
-        # COMPLEXITY: O(n) where n is the number of tokens
-        if tokens is None:
-            return {}
-        self.build_vocab(tokens)
-        return self.vocab
-    
-    # Method:         void print(Frequencies<Token, Count>)
-    def print(self, dict):
-        # COMPLEXITY: O(nlogn) where n=#(dict_items)
-        # O(nlogn) for sorting, O(n) for iterating over each key. 
-        # dict_items = sorted(dict.items(), key=lambda kv: kv[1], reverse=True)
-        for token, count in dict.items():
-            print(token,"\t",count)
 
 
 class Indexer():
@@ -42,7 +16,7 @@ class Indexer():
     def clean_index(self):
         self.index = {}
         self.doc_hashmap = {}
-        self.doc_ids = set()
+        # self.doc_ids = set()
         self.doc_count = 0
 
 
@@ -64,7 +38,6 @@ class Indexer():
         return len(self.index)
 
     def update_index(self, documents):
-        vocab = Vocab()
         self.logger.info("Current index update started...")
        
         for doc_path in documents:
@@ -75,7 +48,7 @@ class Indexer():
                  self.logger.warn(f"Failed to parse {doc_path}")
                  continue
             self.doc_count +=1
-            self.doc_ids.add(doc['url'])
+            # self.doc_ids.add(doc['url'])
             if self.doc_count in self.doc_hashmap:
                 self.logger.info("Error: Key doc_count already present in doc_hashmap")
             self.doc_hashmap[self.doc_count]=doc['url']
@@ -84,7 +57,7 @@ class Indexer():
             # total_doc_tokens = len(tokens)
             self.logger.info(f"parsed {self.doc_count} docurl: {doc['url']} ------ token count: {len(tokens)} ")
             # self.logger.info(f"{self.doc_count}")
-            for token, freq in vocab.computeWordFrequencies(tokens).items():    # For next assignments break here on size and save partial indexes and continue
+            for token, freq in tokens.items():    # For next assignments break here on size and save partial indexes and continue
                 if token not in self.index:
                     self.index[token] = []
                 self.index[token].append((self.doc_count, freq))
