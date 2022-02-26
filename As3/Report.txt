@@ -1,0 +1,3 @@
+The number of indexed documents: 1988 
+The number of unique tokens: 15165 
+Index size: 1916408.3857421875 MB 
