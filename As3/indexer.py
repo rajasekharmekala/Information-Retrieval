@@ -28,8 +28,8 @@ class Vocab:
     def print(self, dict):
         # COMPLEXITY: O(nlogn) where n=#(dict_items)
         # O(nlogn) for sorting, O(n) for iterating over each key. 
-        dict_items = sorted(dict.items(), key=lambda kv: kv[1], reverse=True)
-        for token, count in dict_items:
+        # dict_items = sorted(dict.items(), key=lambda kv: kv[1], reverse=True)
+        for token, count in dict.items():
             print(token,"\t",count)
 
 
@@ -41,6 +41,7 @@ class Indexer():
 
     def clean_index(self):
         self.index = {}
+        self.doc_hashmap = {}
         self.doc_ids = set()
         self.doc_count = 0
 
@@ -75,18 +76,26 @@ class Indexer():
                  continue
             self.doc_count +=1
             self.doc_ids.add(doc['url'])
+            if self.doc_count in self.doc_hashmap:
+                self.logger.info("Error: Key doc_count already present in doc_hashmap")
+            self.doc_hashmap[self.doc_count]=doc['url']
+
             tokens = get_stemmed_tokens(doc['content'])
             # total_doc_tokens = len(tokens)
             self.logger.info(f"parsed {self.doc_count} docurl: {doc['url']} ------ token count: {len(tokens)} ")
             # self.logger.info(f"{self.doc_count}")
-            for token, freq in vocab.computeWordFrequencies(tokens).items():
+            for token, freq in vocab.computeWordFrequencies(tokens).items():    # For next assignments break here on size and save partial indexes and continue
                 if token not in self.index:
                     self.index[token] = []
-                self.index[token].append((doc['url'], freq))
+                self.index[token].append((self.doc_count, freq))
     
-    def save(self, path):
+    def save_index(self, path):             # next to save partial indexes
         with open(path, 'w+') as f:
             json.dump(self.index, f)
+    
+    def save_doc_hashmap(self, path):      
+        with open(path, 'w+') as f:
+            json.dump(self.doc_hashmap, f)
 
             
 
@@ -94,16 +103,17 @@ def main(args):
     data_path = args.path
     indexer = Indexer(data_path)
     indexer.build_index()
-    # indexer.save(args.indexfile)
+    indexer.save_index(args.indexfile)
+    indexer.save_doc_hashmap("doc_hashmap.txt")
     index_size_in_bytes = os.path.getsize(args.indexfile)
-    index_size = index_size_in_bytes/1024
+    index_size = index_size_in_bytes/(1024)
     doc_count = indexer.get_doc_count()
     token_count = indexer.get_token_count()
     print()
     with open("Report.txt", 'w+') as fp:
         fp.write(f"The number of indexed documents: {doc_count} \n")
         fp.write(f"The number of unique tokens: {token_count} \n")
-        fp.write(f"Index size: {index_size} MB \n")
+        fp.write(f"Index size: {index_size} KB \n")
 
     with open("Report.md", 'w+') as fp:
         fp.write(f"<table> \
@@ -118,7 +128,7 @@ def main(args):
                         <tr> \
                         <td>{doc_count}</td> \
                         <td>{token_count}</td> \
-                        <td>{index_size} MB</td> \
+                        <td>{index_size} KB</td> \
                         </tr> \
                     </tbody> \
                     </table> \
