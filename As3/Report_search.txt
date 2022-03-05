@@ -1,0 +1,40 @@
+
+Input query: cristina lopes
+Query response time: 0.013842000000000354
+https://www.ics.uci.edu/~hsajnani/
+http://mondego.ics.uci.edu/
+https://www.informatics.uci.edu/explore/facts-figures/
+https://www.ics.uci.edu/~sjavanma/
+https://www.informatics.uci.edu/explore/faculty-profiles/cristina-lopes/
+
+Input query: machine learning
+Query response time: 0.013185000000000002
+https://cml.ics.uci.edu/category/aiml/page/2/
+https://cml.ics.uci.edu/category/aiml/
+https://www.ics.uci.edu/~pazzani/Publications/OldPublications.html
+https://www.ics.uci.edu/~pazzani/Publications/APubs.html
+https://www.ics.uci.edu/community/news/view_news.php?id=5
+
+Input query: ACM
+Query response time: 0.005863000000000618
+https://www.ics.uci.edu/~eppstein/pubs/pubs.ff
+https://www.ics.uci.edu/~eppstein/bibs/eppstein.html
+https://www.ics.uci.edu/~eppstein/pubs/all.html
+https://www.ics.uci.edu/~eppstein/pubs/geom-all.html
+https://www.ics.uci.edu/~dan/class/267P/datasets/calgary/bib
+
+Input query: master of software engineering
+Query response time: 0.020983000000000196
+https://www.ics.uci.edu/~kay/courses/h22/hw/DVD.txt
+https://www.ics.uci.edu/~kay/courses/h22/hw/DVD-random.txt
+https://www.informatics.uci.edu/very-top-footer-menu-items/people/
+https://www.informatics.uci.edu/explore/books-we-have-written/
+https://www.informatics.uci.edu/grad/ms-software-engineering/
+
+Input query: information retrieval
+Query response time: 0.013754000000000488
+http://www-db.ics.uci.edu/pages/research/mars/
+http://www-db.ics.uci.edu/pages/research/mars/index.shtml
+http://www-db.ics.uci.edu/pages/research/mars.shtml
+https://www.ics.uci.edu/~ejw/authoring/protocol/draft-ietf-webdav-protocol-10.txt
+https://www.ics.uci.edu/~ejw/authoring/protocol/draft-ietf-webdav-protocol-09.txt

@@ -27,28 +27,25 @@ def do_search() -> None:
 
     retriever = Search()
 
-    terminate = False
-    while not terminate:
-        query = input("\nInput query (q to quit): ")
-        file.write("\nInput query (q to quit): ")
+    while True:
+        query = input("\nInput query: ")
+        file.write("\nInput query: ")
         file.write(query)
         file.write("\n")
 
-        if query.strip() == 'q':
-            terminate = True
-        else:
-            start = process_time()
-            result = retriever.search_query(query)
-            time = f"Query response time: {process_time() - start}"
 
-            file.write(time)
+        start = process_time()
+        result = retriever.search_query(query)
+        time = f"Query response time: {process_time() - start}"
+
+        file.write(time)
+        file.write("\n")
+        print(time)
+
+        for link in result:
+            file.write(link)
             file.write("\n")
-            print(time)
-
-            for link in result:
-                file.write(link)
-                file.write("\n")
-                print(link)
+            print(link)
 
     file.close()
 

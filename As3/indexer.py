@@ -36,19 +36,18 @@ class Indexer():
     def get_token_count(self):
         return len(self.index)
     
-    # calculate tf-idf scores for self.tfidf_scores
-    def calculate_tf_idf_scores(self, N) -> None:
+    def calculate_tf_idf_scores(self, N):
 
         # w_t,d = (1+log(tf_t,d)) x log(N/df_t)
         for token in self.index:
-            # number of documents that contain this token
-            df_t = len(self.index[token])
+            # no of documents containing this token
+            doc_token = len(self.index[token])
             idf = 0
-            if df_t != 0:
-                idf = math.log10(N / df_t)
+            if doc_token != 0:
+                idf = math.log10(N / doc_token)
 
             for doc_id, freq in self.index[token].items():
-                #  term frequency in current doc
+                # term frequency in current document
                 tf = 1 + math.log10((self.index[token][doc_id]))
                 self.index[token][doc_id] = tf * idf
 
