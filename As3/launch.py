@@ -23,7 +23,7 @@ def indexing():
 
 
     end = process_time()
-    print("Total time:", end-start)
+    print("Total time in ms:", (end-start)*1000)
 
 
 def do_search() -> None:
@@ -40,8 +40,8 @@ def do_search() -> None:
 
 
         start = process_time()
-        result = retriever.search_query(query)
-        time = f"Query response time: {process_time() - start}"
+        result = retriever.search_query(query,5)
+        time = f"Query response time in ms: {(process_time() - start)*1000}"
 
         file.write(time)
         file.write("\n")

@@ -56,10 +56,12 @@ def get_stemmed_tokens(html):
 
     # important word scoring
     tags_score = {}
-    important_words = soup.find_all(["title", "b", "strong",  "h1", "h2", "h3"])
+    important_words = soup.find_all(["a", "title", "b", "strong",  "h1", "h2", "h3"])
 
     for words in important_words:
         rank = 0
+        if words.name == "a": # Anchor text 
+            rank = 30
         if words.name == "title":
             rank = 10
         elif words.name == "h1":

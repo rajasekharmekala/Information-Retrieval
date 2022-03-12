@@ -94,8 +94,8 @@ class Indexer():
 
             
 
-            # if(self.doc_count %200 == 0):
-            self.logger.info(f"parsed {self.doc_count} docurl: {doc['url']} ------ no: of tokens : {len(tokenFreq)} ")
+            if(self.doc_count %200 == 0):
+                self.logger.info(f"parsed {self.doc_count} docurl: {doc['url']} ------ no: of tokens : {len(tokenFreq)} ")
 
             for token, freq in tokenFreq.items():    # For next assignments break here on size and save partial indexes and continue
                 if token not in self.index:
