@@ -26,7 +26,7 @@ class Search:
         #f2 = open('final_index.txt', 'r')
         #s_dict = json.load(f1)
         idx = self.seek_index[token[0:2]]
-        print(idx)
+        # print(idx)
         self.final_index.seek(idx)
         while True:
             line = self.final_index.readline().split(" - ")
@@ -36,10 +36,10 @@ class Search:
         if token == line[0]:
             term = line[0]
             d1 = json.loads(line[1])
-            print(term)
+            # print(term)
             return d1
         else:
-            print("Not found!!")
+            # print("Not found!!")
             return {}
 
     def load_file(self, filepath):
@@ -91,6 +91,9 @@ class Search:
         try:
             for token in query_tokens:
                 postings = self.retrive(token)
+                if(len(postings)==0):
+                    # print("Query word - ", token, " Not found in Index!!")
+                    continue
                 #query_token_visited[token] = query_token_visited.get(token, 0) + 1
                 #if query_token_visited[token] > 1:
                 #    break
