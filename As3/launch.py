@@ -5,6 +5,7 @@ import argparse
 
 import indexer
 from search import Search
+from merger import Merger
 from time import process_time
 
 
@@ -16,6 +17,10 @@ def indexing():
 
     # initialization
     indexer.run()
+    print("Indexer completed! Starting Merging!!")
+    Merger().merge_files()
+    print("Merging Completed!!")
+
 
     end = process_time()
     print("Total time:", end-start)

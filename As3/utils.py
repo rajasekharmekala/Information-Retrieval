@@ -33,20 +33,52 @@ def is_tag_visible(element):
     return True
 
 
+
 def get_stemmed_tokens(html):
     soup = BeautifulSoup(html, 'html.parser')
     ps = PorterStemmer()
     text = soup.get_text()
     tokens = word_tokenize(text)
 
+    token_count=0
     filtered_tokens = {}
     for token in tokens:
         token = re.sub(r'[^\x00-\x7F]+', '', token)
         token = token.lower()
         token = ps.stem(token)
-        if re.match(r"[a-zA-Z0-9@#*&']{2,}", token):
-            if token in filtered_tokens:
-                filtered_tokens[token] += 1
+        for ftoken in re.findall(r"[a-zA-Z0-9@#*&']{2,}", token):
+            if ftoken in filtered_tokens:
+                filtered_tokens[ftoken] += 1
             else:
-                filtered_tokens[token] = 1
-    return filtered_tokens
+                filtered_tokens[ftoken] = 1
+
+            token_count+=1
+
+    # important word scoring
+    tags_score = {}
+    important_words = soup.find_all(["title", "b", "strong",  "h1", "h2", "h3"])
+
+    for words in important_words:
+        rank = 0
+        if words.name == "title":
+            rank = 10
+        elif words.name == "h1":
+            rank = 5
+        elif words.name == "h2":
+            rank = 4
+        elif words.name == "h3":
+            rank = 3
+        elif words.name == "b" or words.name == "strong":
+            rank = 2
+
+        for token in word_tokenize(words.text):
+            token = re.sub(r'[^\x00-\x7F]+', '', token)
+            token = token.lower()
+            token = ps.stem(token)
+            for ftoken in re.findall(r"[a-zA-Z0-9@#*&']{2,}", token):
+                if ftoken in tags_score:
+                    tags_score[ftoken] += rank
+                else:
+                    tags_score[ftoken] = rank
+
+    return token_count, filtered_tokens, tags_score
