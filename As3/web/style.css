@@ -3,6 +3,15 @@ body {
     position: relative;
 }
 
+#title {
+    display: flex;
+    height: 64px;
+    width: 100%;
+    align-items: flex-end;
+    position: fixed;
+    background-color: rgb(202, 84, 29);
+}
+
 #topbar {
     display: flex;
     height: 64px;
