@@ -16,7 +16,7 @@ class Search:
         self.doc_id_to_url = self.load_file('doc_hashmap.json')
         self.seek_index = self.load_file('seek_index.txt')
         self.final_index = open('final_index.txt', 'r')
-        self.N = 2000
+        self.N = 55000
 
         end = process_time()
         # print("Total time to load indexes in memory:", end-start)
@@ -100,15 +100,18 @@ class Search:
                 query_tf = 1 + math.log10(query_tokens[token])
                 query_idf = math.log10(self.N / len(postings))
                 for doc_id in postings:
-                    doc_scores[doc_id] = doc_scores.get(doc_id, 0) + (0.8 * postings[doc_id][0] + 0.2 *  math.log10(postings[doc_id][1]+1)) * (query_tf * query_idf)
+                    doc_scores[doc_id] = doc_scores.get(doc_id, 0) + (0.9 * postings[doc_id][0] + 0.1 *  math.log10(postings[doc_id][1]+1)) * (query_tf * query_idf)
         except KeyError:
             print("token in the query is not in the corpus")
         # use of heap reduces the sort time complexity
-        for doc_id in doc_scores:
-            doc_scores[doc_id] /= self.doc_id_to_url[doc_id][1]
+        # for doc_id in doc_scores:
+        #     # doc_scores[doc_id] /= self.doc_id_to_url[doc_id][1]
+        #     print(doc_id, doc_scores[doc_id])
+        # print("END")
         search_topk = heapq.nlargest(k, doc_scores, key=doc_scores.get)
         url_klist=[]
         for doc_id in search_topk:
+            print(doc_id,doc_scores[doc_id], postings[doc_id][0], )
             url_klist.append(self.doc_id_to_url[doc_id][0])
 
         return url_klist

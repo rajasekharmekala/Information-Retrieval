@@ -68,7 +68,7 @@ class Indexer():
         for doc_path in tqdm(documents):
             self.doc_count +=1
 
-            if self.doc_count in [600,1200]: #[18000, 36000]
+            if self.doc_count in [18000, 36000]: #[18000, 36000]
                 self.save_index()
                 self.file_count+=1
                 self.index={}
@@ -94,7 +94,7 @@ class Indexer():
 
             
 
-            if(self.doc_count %200 == 0):
+            if(self.doc_count %2000 == 0):
                 self.logger.info(f"parsed {self.doc_count} docurl: {doc['url']} ------ no: of tokens : {len(tokenFreq)} ")
 
             for token, freq in tokenFreq.items():    # For next assignments break here on size and save partial indexes and continue
@@ -167,7 +167,7 @@ def main(args):
 
 def run():
     parser = argparse.ArgumentParser(description='Build index of a folder.')
-    parser.add_argument('--path', help='folderpath to index', default="./data/ANALYST")
+    parser.add_argument('--path', help='folderpath to index', default="./data/DEV")
     parser.add_argument('--indexing', help='To do indexing? False or True ', default=True)
     args = parser.parse_args()
     main(args)

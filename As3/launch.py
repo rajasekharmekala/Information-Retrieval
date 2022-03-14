@@ -40,7 +40,7 @@ def do_search() -> None:
 
 
         start = process_time()
-        result = retriever.search_query(query,5)
+        result = retriever.search_query(query,10)
         time = f"Query response time in ms: {(process_time() - start)*1000}"
 
         file.write(time)

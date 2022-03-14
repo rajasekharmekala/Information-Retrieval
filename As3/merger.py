@@ -5,7 +5,7 @@ import re
 
 class Merger:
     def __init__(self):
-        self.N = 2000
+        self.N = 55000
         self.seek_dict={}
         self.offset=0
 
