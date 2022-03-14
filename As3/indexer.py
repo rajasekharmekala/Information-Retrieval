@@ -5,7 +5,7 @@ import math
 from bs4 import BeautifulSoup
 from urllib.parse import urldefrag
 from numpy import size
-from utils import get_logger, get_stemmed_tokens
+from utils import get_logger, get_stemmed_tokens, compute_simhash
 from tqdm import tqdm
 from urllib.parse import urlparse, urljoin, urldefrag
 import heapq
@@ -92,10 +92,11 @@ class Indexer():
             # self.unique_urls.add(doc['url'])
 
             token_count, tokenFreq, tags_score = get_stemmed_tokens(doc['content'])
+            simhash_value = compute_simhash(tokenFreq)
 
             if self.doc_count in self.doc_hashmap:
                 self.logger.info("Error: Key doc_count already present in doc_hashmap")
-            self.doc_hashmap[self.doc_count]=[doc['url'],token_count]
+            self.doc_hashmap[self.doc_count] = [doc['url'], token_count, simhash_value]
 
             if doc['url'] in self.inv_doc_hashmap:
                 self.logger.info("Error: Key url already present in inv_doc_hashmap")

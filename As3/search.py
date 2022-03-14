@@ -5,7 +5,7 @@ from nltk.stem import PorterStemmer
 from time import process_time
 import math
 import heapq
-
+from utils import compare_simhash
 
 class Search:
     def __init__(self):
@@ -121,10 +121,20 @@ class Search:
         # use of heap reduces the sort time complexity
         # for doc_id in doc_scores:
         #     doc_scores[doc_id] /= (norm_doc_scores[doc_id]**(1/2) * norm_query**(1/2))
-        search_topk = heapq.nlargest(k, doc_scores, key=doc_scores.get)
+        search_topk = heapq.nlargest(k+5, doc_scores, key=doc_scores.get)
+
         url_klist=[]
+        past_hash = []
         for doc_id in search_topk:
             print(doc_id,doc_scores[doc_id])
-            url_klist.append(self.doc_id_to_url[doc_id][0])
+            if len(url_klist) <= k:
+                if compare_simhash(self.doc_id_to_url[doc_id][2], past_hash):
+                    if len(past_hash) >= 20:
+                        del past_hash[0]
+                        # del past_hash_urls[0]
+                    url_klist.append(self.doc_id_to_url[doc_id][0])
+                past_hash.append(self.doc_id_to_url[doc_id][2])
+            else:
+                break
 
-        return url_klist
+        return url_klist[:k]
