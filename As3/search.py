@@ -15,6 +15,8 @@ class Search:
         print("Starting at ", start)
         self.doc_id_to_url = self.load_file('doc_hashmap.json')
         self.seek_index = self.load_file('seek_index.txt')
+        self.page_rank_scores = self.load_file('page_rank_scores.json')
+        self.hits_scores = self.load_file('hits_scores.json')
         self.final_index = open('final_index.txt', 'r')
         self.N = 55000
 
@@ -87,6 +89,8 @@ class Search:
         '''
 
         doc_scores = dict()
+        norm_doc_scores = dict()
+        norm_query = 0
         #query_token_visited = dict()
         try:
             for token in query_tokens:
@@ -99,19 +103,28 @@ class Search:
                 #    break
                 query_tf = 1 + math.log10(query_tokens[token])
                 query_idf = math.log10(self.N / len(postings))
+                norm_query += (query_tf * query_idf)**2
                 for doc_id in postings:
-                    doc_scores[doc_id] = doc_scores.get(doc_id, 0) + (0.9 * postings[doc_id][0] + 0.1 *  math.log10(postings[doc_id][1]+1)) * (query_tf * query_idf)
+                    score = 0.7 * postings[doc_id][0] + 0.15 * math.log10(postings[doc_id][1]+1)
+                    if doc_id in self.page_rank_scores and doc_id in self.hits_scores:
+                        score += 0.1 * self.page_rank_scores[doc_id] + 0.05 * self.hits_scores[doc_id]
+                    elif doc_id in self.page_rank_scores:
+                        score += 0.15 * self.page_rank_scores[doc_id]
+                    elif doc_id in self.hits_scores:
+                        score += 0.15 * self.hits_scores[doc_id]
+                    else:
+                        score += 0.15 * postings[doc_id][0]
+                    norm_doc_scores[doc_id] = norm_doc_scores.get(doc_id, 0) + score**2
+                    doc_scores[doc_id] = doc_scores.get(doc_id, 0) + score * (query_tf * query_idf)
         except KeyError:
             print("token in the query is not in the corpus")
         # use of heap reduces the sort time complexity
         # for doc_id in doc_scores:
-        #     # doc_scores[doc_id] /= self.doc_id_to_url[doc_id][1]
-        #     print(doc_id, doc_scores[doc_id])
-        # print("END")
+        #     doc_scores[doc_id] /= (norm_doc_scores[doc_id]**(1/2) * norm_query**(1/2))
         search_topk = heapq.nlargest(k, doc_scores, key=doc_scores.get)
         url_klist=[]
         for doc_id in search_topk:
-            print(doc_id,doc_scores[doc_id], postings[doc_id][0], )
+            print(doc_id,doc_scores[doc_id])
             url_klist.append(self.doc_id_to_url[doc_id][0])
 
         return url_klist
