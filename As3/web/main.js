@@ -1,11 +1,12 @@
 let searchButton = document.getElementById("searchbarbutton")
 let searchField = document.getElementById("searchbartext")
 let searchResults = document.getElementById("searchresultsarea")
+let searchTimeText = document.getElementById("searchtimetext")
 
 let searchClicked = (event)=>{
     let text = searchField.value
     if(!text){
-        updateResults([])
+        updateResults([], "")
         alert("Please enter a valid text!")
     }else{
         let xhttp = new XMLHttpRequest();
@@ -14,7 +15,7 @@ let searchClicked = (event)=>{
                // Typical action to be performed when the document is ready:
                 data = JSON.parse(xhttp.responseText);
                 result = data.result
-                updateResults(result)
+                updateResults(result, data.time || "")
             }
         };
         xhttp.open("GET", "/query/"+text, true);
@@ -23,8 +24,11 @@ let searchClicked = (event)=>{
 }
 
 
-let updateResults = (array)=>{
-    array = array || []
+
+
+let updateResults = (result, time)=>{
+    result = result || []
+
 
 //     <div class="searchresult">
 //     <h2>Lock (computer science) - Wikipedia</h2>
@@ -33,21 +37,45 @@ let updateResults = (array)=>{
 //     <p> environment where there are many threads of execution.</p>
 // </div>
 
-while (searchResults.firstChild) {
-    searchResults.removeChild(searchResults.firstChild);
-}
+    while (searchResults.firstChild) {
+        searchResults.removeChild(searchResults.firstChild);
+    }
 
-    for (var i = 0; i < array.length; i++) {
-        var item = document.createElement('div');
+    if(result.length == 0){
+        let p = document.createElement('p');
+        p.appendChild(document.createTextNode("No results found"))
+
+        searchResults.appendChild(p)
+        return
+    }
+
+
+    for (let i = 0; i < result.length; i++) {
+        let item = document.createElement('div');
         item.classList.add("searchresult")
-        var h2 = document.createElement('h2');
-        h2.appendChild(document.createTextNode(array[i]));
+        let h2 = document.createElement('h2');
+        let a = document.createElement('a');
+        let p = document.createElement('p');
+        h2.appendChild(document.createTextNode(result[i].title));
+        a.appendChild(document.createTextNode(result[i].url))
+        p.appendChild(document.createTextNode(result[i].display_text))
         item.appendChild(h2)
+        item.appendChild(a)
+        item.appendChild(p)
         searchResults.appendChild(item);
     }
+
+    while (searchTimeText.firstChild) {
+        searchTimeText.removeChild(searchTimeText.firstChild)
+    }
+    let p_t = document.createElement('p');
+    p_t.appendChild(document.createTextNode(time))
+    searchTimeText.appendChild(p_t)
+
+
 }
 
-if(searchButton && searchResults && searchField){
+if(searchButton && searchResults && searchField && searchTimeText){
     searchButton.addEventListener('click', searchClicked)
 }
 

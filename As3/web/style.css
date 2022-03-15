@@ -144,14 +144,16 @@ html, body {
     font-family: 'Arial';
 }
 
-#searchresultsnumber {
+#searchtimetext {
     font-size: 0.8rem;
+    margin-left: 158px;
     color: gray;
 }
 
 .searchresult {
     margin-left: 8px;
 }
+
 
 .searchresult h2 {
     font-size: 19px;
