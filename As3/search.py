@@ -7,6 +7,7 @@ import math
 import heapq
 from utils import compare_simhash
 
+
 class Search:
     def __init__(self):
         # load indexes in memory
@@ -59,15 +60,24 @@ class Search:
         query_dict = {}
         query_tokens = dict()
         query_word_list = []
-
+        last_token = ""
         for token in tokens:
             token = re.sub(r'[^\x00-\x7F]+', '', token)
             token = token.lower()
             token = self.ps.stem(token)
-            if re.match(r"[a-zA-Z0-9@#*&']{2,}", token):
+            for ftoken in re.findall(r"[a-zA-Z0-9@#*&']{2,}", token):
                 query_len += 1
-                query_tokens[token] = query_tokens.get(token, 0) + 1
-                query_word_list.append(token)
+                query_tokens[ftoken] = query_tokens.get(ftoken, 0) + 1
+                query_word_list.append(ftoken)
+
+                if last_token == "":
+                    last_token = ftoken
+                    continue
+                bigram_token = last_token + " " + ftoken
+                query_tokens[bigram_token] = query_tokens.get(bigram_token, 0) + 1
+                query_word_list.append(bigram_token)
+
+                last_token = ftoken
                 # for doc_id in self.data[token]:
                 #     query_dict[doc_id] = query_dict.get(doc_id, 0) + 1
         '''
@@ -87,7 +97,7 @@ class Search:
             search_list.append(self.doc_id_to_url[doc_id])
             count+=1
         '''
-
+        print(query_tokens)
         doc_scores = dict()
         norm_doc_scores = dict()
         norm_query = 0
@@ -128,13 +138,19 @@ class Search:
         for doc_id in search_topk:
             print(doc_id,doc_scores[doc_id])
             if len(url_klist) <= k:
+                #print(self.doc_id_to_url[doc_id][3])
                 if compare_simhash(self.doc_id_to_url[doc_id][2], past_hash):
                     if len(past_hash) >= 20:
                         del past_hash[0]
                         # del past_hash_urls[0]
-                    url_klist.append(self.doc_id_to_url[doc_id][0])
+                    display_data = dict()
+                    display_data['url'] = self.doc_id_to_url[doc_id][0]
+                    display_data['title'] = self.doc_id_to_url[doc_id][3]
+                    display_data['display_text'] = self.doc_id_to_url[doc_id][4]
+
+                    url_klist.append(json.dumps(display_data))
                 past_hash.append(self.doc_id_to_url[doc_id][2])
             else:
                 break
-
+        print(url_klist)
         return url_klist[:k]

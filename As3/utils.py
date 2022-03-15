@@ -77,21 +77,35 @@ def get_stemmed_tokens(html):
 
     token_count=0
     filtered_tokens = {}
+    last_token = ""
+    display_text = ""
     for token in tokens:
         token = re.sub(r'[^\x00-\x7F]+', '', token)
         token = token.lower()
         token = ps.stem(token)
         for ftoken in re.findall(r"[a-zA-Z0-9@#*&']{2,}", token):
+            if token_count < 20:
+                display_text += ftoken + " "
             if ftoken in filtered_tokens:
                 filtered_tokens[ftoken] += 1
             else:
                 filtered_tokens[ftoken] = 1
 
+            if last_token == "":
+                last_token = ftoken
+                continue
+            bigram_token = last_token + " " + ftoken
+            if bigram_token in filtered_tokens:
+                filtered_tokens[bigram_token] += 1
+            else:
+                filtered_tokens[bigram_token] = 1
+            last_token = ftoken
             token_count+=1
 
     # important word scoring
     tags_score = {}
     important_words = soup.find_all(["a", "title", "b", "strong",  "h1", "h2", "h3"])
+    doc_title = ""
 
     for words in important_words:
         rank = 0
@@ -99,6 +113,7 @@ def get_stemmed_tokens(html):
             rank = 30
         if words.name == "title":
             rank = 10
+            doc_title = words.text
         elif words.name == "h1":
             rank = 5
         elif words.name == "h2":
@@ -118,4 +133,4 @@ def get_stemmed_tokens(html):
                 else:
                     tags_score[ftoken] = rank
 
-    return token_count, filtered_tokens, tags_score
+    return token_count, filtered_tokens, tags_score, doc_title, display_text

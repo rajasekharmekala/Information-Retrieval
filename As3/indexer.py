@@ -91,12 +91,12 @@ class Indexer():
             #     continue
             # self.unique_urls.add(doc['url'])
 
-            token_count, tokenFreq, tags_score = get_stemmed_tokens(doc['content'])
+            token_count, tokenFreq, tags_score, doc_title, display_text = get_stemmed_tokens(doc['content'])
             simhash_value = compute_simhash(tokenFreq)
 
             if self.doc_count in self.doc_hashmap:
                 self.logger.info("Error: Key doc_count already present in doc_hashmap")
-            self.doc_hashmap[self.doc_count] = [doc['url'], token_count, simhash_value]
+            self.doc_hashmap[self.doc_count] = [doc['url'], token_count, simhash_value, doc_title, display_text]
 
             if doc['url'] in self.inv_doc_hashmap:
                 self.logger.info("Error: Key url already present in inv_doc_hashmap")
@@ -105,7 +105,7 @@ class Indexer():
             if(self.doc_count %2000 == 0):
                 self.logger.info(f"parsed {self.doc_count} docurl: {doc['url']} ------ no: of tokens : {len(tokenFreq)} ")
 
-            for token, freq in tokenFreq.items():    # For next assignments break here on size and save partial indexes and continue
+            for token, freq in tokenFreq.items():
                 if token not in self.index:
                     self.index[token] = {}
                 # if self.doc_count not in self.index[token]:
