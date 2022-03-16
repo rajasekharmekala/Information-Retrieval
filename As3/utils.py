@@ -138,26 +138,33 @@ def get_stemmed_tokens(html):
 
 
 
-# def stop_words():
-#     stop_words_list = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before", "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
-#     stop_words_dict = {}
-#     ps = PorterStemmer()
-#     for word in stop_words_list and len(word)>1:
-#             word = word.lower()
-#             word = ps.stem(word)
-#             if word not in stop_words_dict:
-#                 postings = Search().retrive(word)
-#                 stop_words_dict[word] = postings
+    # def stop_words(self):
+    #     print("hi")
+    #     stop_words_list = ["me", "my", "we", "our", "you", "your", "yours", "he", "him", "his", "she", "her", "it", "its", "they", "them", "their", "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "have", "has", "had", "do", "does", "did", "an", "the", "and", "but", "if", "or", "as", "of", "at", "by", "for", "with", "about", "to", "from", "in", "out", "on", "off", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "some", "such", "no", "nor", "not", "only", "same", "so", "than", "too", "very", "can", "will", "now"]
+    #     #stop_words_list = ["this", "that","is","the", "of", "and","be","to", "do", "not"]
+    #     stop_words_dict1 = {}
+    #     ps = PorterStemmer()
+    #     for word in stop_words_list:
+    #         if((len(word)>1)):
+    #             # print(word)
+    #             word = word.lower()
+    #             word = ps.stem(word)
+    #             if word not in stop_words_dict1:
+    #                 postings = self.retrive(word)
+    #                 stop_words_dict1[word] = postings
 
-#     for word1 in stop_words_list and len(word1)>1:
-#         for word2 in stop_words_list and len(word2)>1:
-#             word1 = word1.lower()
-#             word1 = ps.stem(word1)
-#             word2 = word2.lower()
-#             word2 = ps.stem(word2)
-#             word = word1 + " " + word2
-#             if word not in stop_words_dict:
-#                 postings = Search().retrive(word)
-#                 stop_words_dict[word] = postings
-
-#     return stop_words_dict
+    #     for word1 in stop_words_list:
+    #         for word2 in stop_words_list:
+    #             if((len(word1)>1) and (len(word2)>1)):
+    #                 word1 = word1.lower()
+    #                 word1 = ps.stem(word1)
+    #                 word2 = word2.lower()
+    #                 word2 = ps.stem(word2)
+    #                 word = word1 + " " + word2
+    #                 if word not in stop_words_dict1:
+    #                     postings = self.retrive(word)
+    #                     stop_words_dict1[word] = postings
+    #     with open("stop_words_dict.json", 'w+') as f:
+    #         json.dump(stop_words_dict1, f)
+    #     # print(stop_words_dict1)         
+    #     return stop_words_dict1

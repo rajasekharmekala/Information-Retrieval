@@ -19,8 +19,7 @@ class Search:
         self.page_rank_scores = self.load_file('page_rank_scores.json')
         self.hits_scores = self.load_file('hits_scores.json')
         self.final_index = open('final_index.txt', 'r')
-        self.stop_words_dict = {}
-        self.stop_words_dict = self.stop_words()
+        self.stop_words_dict = self.load_file('stop_words_dict.json')
         end = process_time()
         self.N = 55000
         print("Total time to init search in memory:", end-start)
@@ -59,36 +58,6 @@ class Search:
         else:
             # print("Not found!!")
             return {}
-
-    def stop_words(self):
-        print("hi")
-        # stop_words_list = ["me", "my", "we", "our", "you", "your", "yours", "he", "him", "his", "she", "her", "it", "its", "they", "them", "their", "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "have", "has", "had", "do", "does", "did", "an", "the", "and", "but", "if", "or", "as", "of", "at", "by", "for", "with", "about", "to", "from", "in", "out", "on", "off", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "some", "such", "no", "nor", "not", "only", "same", "so", "than", "too", "very", "can", "will", "now"]
-        stop_words_list = ["this", "that","is","the", "of", "and","be","to", "do", "not"]
-        stop_words_dict1 = {}
-        ps = PorterStemmer()
-        for word in stop_words_list:
-            if((len(word)>1)):
-                # print(word)
-                word = word.lower()
-                word = ps.stem(word)
-                if word not in stop_words_dict1:
-                    postings = self.retrive(word)
-                    stop_words_dict1[word] = postings
-
-        for word1 in stop_words_list:
-            for word2 in stop_words_list:
-                if((len(word1)>1) and (len(word2)>1)):
-                    word1 = word1.lower()
-                    word1 = ps.stem(word1)
-                    word2 = word2.lower()
-                    word2 = ps.stem(word2)
-                    word = word1 + " " + word2
-                    if word not in stop_words_dict1:
-                        postings = self.retrive(word)
-                        stop_words_dict1[word] = postings
-
-        # print(stop_words_dict1)         
-        return stop_words_dict1
 
     def load_file(self, filepath):
         # Opening JSON file
