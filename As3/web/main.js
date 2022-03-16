@@ -56,12 +56,13 @@ let updateResults = (result, time)=>{
         let h2 = document.createElement('h2');
         let a = document.createElement('a');
         let p = document.createElement('p');
-        h2.appendChild(document.createTextNode(result[i].title));
+        h2.appendChild(document.createTextNode(result[i].title || result[i].url ));
         a.appendChild(document.createTextNode(result[i].url))
         p.appendChild(document.createTextNode(result[i].display_text))
         item.appendChild(h2)
         item.appendChild(a)
         item.appendChild(p)
+        item.addEventListener('click', ()=> window.location=result[i].url)
         searchResults.appendChild(item);
     }
 
@@ -77,5 +78,10 @@ let updateResults = (result, time)=>{
 
 if(searchButton && searchResults && searchField && searchTimeText){
     searchButton.addEventListener('click', searchClicked)
+    searchField.addEventListener('keydown', (event)=>{
+    if(event.keyCode == 13){
+        searchClicked(event)
+    }
+    })
 }
 

@@ -148,7 +148,7 @@ class Search:
                     display_data['title'] = self.doc_id_to_url[doc_id][3]
                     display_data['display_text'] = self.doc_id_to_url[doc_id][4]
 
-                    url_klist.append(json.dumps(display_data))
+                    url_klist.append(display_data)
                 past_hash.append(self.doc_id_to_url[doc_id][2])
             else:
                 break
