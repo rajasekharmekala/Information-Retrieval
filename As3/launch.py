@@ -48,7 +48,7 @@ def do_search() -> None:
         print(time)
 
         for link in result:
-            file.write(link)
+            file.write(link['url'])
             file.write("\n")
             print(link)
 

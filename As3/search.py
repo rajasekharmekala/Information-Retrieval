@@ -19,18 +19,33 @@ class Search:
         self.page_rank_scores = self.load_file('page_rank_scores.json')
         self.hits_scores = self.load_file('hits_scores.json')
         self.final_index = open('final_index.txt', 'r')
-        self.N = 55000
-
+        self.stop_words_dict = {}
+        self.stop_words_dict = self.stop_words()
         end = process_time()
-        # print("Total time to load indexes in memory:", end-start)
+        self.N = 55000
+        print("Total time to init search in memory:", end-start)
+
+    
 
     def retrive(self, token):
         #f1 = open('seek_index.txt', 'r')
         #f2 = open('final_index.txt', 'r')
         #s_dict = json.load(f1)
-        idx = self.seek_index[token[0:2]]
+        # print(token)
+        if token in self.stop_words_dict:
+            return self.stop_words_dict[token]
+
+        token_list = token.split(" ")
+        bigram_key=token
+        if(len(token_list)==1):
+            bigram_key=token_list[0][0:2]
+        if(len(token_list)==2):
+            bigram_key=token_list[0][0:2]+"-"+token_list[1][0:2]
+
+        idx = self.seek_index[bigram_key]
         # print(idx)
         self.final_index.seek(idx)
+        # print(idx)
         while True:
             line = self.final_index.readline().split(" - ")
             # print(line)
@@ -44,6 +59,36 @@ class Search:
         else:
             # print("Not found!!")
             return {}
+
+    def stop_words(self):
+        print("hi")
+        # stop_words_list = ["me", "my", "we", "our", "you", "your", "yours", "he", "him", "his", "she", "her", "it", "its", "they", "them", "their", "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "have", "has", "had", "do", "does", "did", "an", "the", "and", "but", "if", "or", "as", "of", "at", "by", "for", "with", "about", "to", "from", "in", "out", "on", "off", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "some", "such", "no", "nor", "not", "only", "same", "so", "than", "too", "very", "can", "will", "now"]
+        stop_words_list = ["this", "that","is","the", "of", "and","be","to", "do", "not"]
+        stop_words_dict1 = {}
+        ps = PorterStemmer()
+        for word in stop_words_list:
+            if((len(word)>1)):
+                # print(word)
+                word = word.lower()
+                word = ps.stem(word)
+                if word not in stop_words_dict1:
+                    postings = self.retrive(word)
+                    stop_words_dict1[word] = postings
+
+        for word1 in stop_words_list:
+            for word2 in stop_words_list:
+                if((len(word1)>1) and (len(word2)>1)):
+                    word1 = word1.lower()
+                    word1 = ps.stem(word1)
+                    word2 = word2.lower()
+                    word2 = ps.stem(word2)
+                    word = word1 + " " + word2
+                    if word not in stop_words_dict1:
+                        postings = self.retrive(word)
+                        stop_words_dict1[word] = postings
+
+        # print(stop_words_dict1)         
+        return stop_words_dict1
 
     def load_file(self, filepath):
         # Opening JSON file
@@ -104,7 +149,9 @@ class Search:
         #query_token_visited = dict()
         try:
             for token in query_tokens:
+                start1 = process_time()
                 postings = self.retrive(token)
+                print("retrieval time - ",(process_time()-start1)*1000)
                 if(len(postings)==0):
                     # print("Query word - ", token, " Not found in Index!!")
                     continue
@@ -139,7 +186,8 @@ class Search:
             print(doc_id,doc_scores[doc_id])
             if len(url_klist) <= k:
                 #print(self.doc_id_to_url[doc_id][3])
-                if compare_simhash(self.doc_id_to_url[doc_id][2], past_hash):
+                if True:
+                #if compare_simhash(self.doc_id_to_url[doc_id][2], past_hash):
                     if len(past_hash) >= 20:
                         del past_hash[0]
                         # del past_hash_urls[0]
@@ -152,5 +200,8 @@ class Search:
                 past_hash.append(self.doc_id_to_url[doc_id][2])
             else:
                 break
-        print(url_klist)
+        #print(url_klist)
         return url_klist[:k]
+
+
+

@@ -5,6 +5,8 @@ import numpy as np
 from search import Search
 from time import process_time
 
+retriever = Search()
+
 # Flask constructor
 # app = Flask(__name__)
 app = Flask(__name__, static_url_path='',  static_folder='web/')
@@ -16,7 +18,7 @@ def search(text):
     data["result"] = []
     if request.method == "GET":
         start = process_time()
-        results = Search().search_query(text,5)
+        results = retriever.search_query(text,5)
         data['time'] = "Query response time in ms: " + str((process_time() - start)*1000)
         data['result'] = results
         # columns = [0, 1, 2, 3, 4]

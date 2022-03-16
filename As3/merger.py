@@ -100,14 +100,24 @@ class Merger:
                         mergedIndex.write(mergedToken + " - " + json.dumps(mergedTokenIdx) + "\n")
                         prev=""
                         reg_ex = r'^([a-z][a-z]|[a-z])'
-                                                        
-                        if mergedToken[0:2] > prev:
-                            if (mergedToken[0:1] not in self.seek_dict):
-                                self.seek_dict[mergedToken[0:1]] = self.offset
-                            if (mergedToken[0:2] not in self.seek_dict):
-                                self.seek_dict[mergedToken[0:2]] = self.offset
 
-                        prev = mergedToken[0:2] 
+
+                        mergedTokens = mergedToken.split(" ")     
+                        if len(mergedTokens)==1:                                
+                            # if mergedToken[0:2] > prev:
+                            # if (mergedToken[0:1] not in self.seek_dict):
+                            #     self.seek_dict[mergedToken[0:1]] = self.offset
+                            if (mergedTokens[0][0:2] not in self.seek_dict):
+                                self.seek_dict[mergedTokens[0][0:2]] = self.offset
+
+                        if len(mergedTokens)==2:                                
+                            # if mergedToken[0:2] > prev:
+                            # if (mergedToken[0:1] not in self.seek_dict):
+                            #     self.seek_dict[mergedToken[0:1]] = self.offset
+                            if (mergedTokens[0][0:2]+"-"+mergedTokens[1][0:2] not in self.seek_dict):
+                                self.seek_dict[mergedTokens[0][0:2]+"-"+mergedTokens[1][0:2]] = self.offset
+
+                        # prev = mergedToken[0:2] 
                         self.offset += len(mergedToken + " - " + json.dumps(mergedTokenIdx) + "\n")
                         # print(self.offset)
 

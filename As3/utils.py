@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 import re
 
+
 def get_logger(name, filename=None):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
@@ -82,10 +83,10 @@ def get_stemmed_tokens(html):
     for token in tokens:
         token = re.sub(r'[^\x00-\x7F]+', '', token)
         token = token.lower()
+        if token_count < 20:
+            display_text += token + " "
         token = ps.stem(token)
         for ftoken in re.findall(r"[a-zA-Z0-9@#*&']{2,}", token):
-            if token_count < 20:
-                display_text += ftoken + " "
             if ftoken in filtered_tokens:
                 filtered_tokens[ftoken] += 1
             else:
@@ -134,3 +135,29 @@ def get_stemmed_tokens(html):
                     tags_score[ftoken] = rank
 
     return token_count, filtered_tokens, tags_score, doc_title, display_text
+
+
+
+# def stop_words():
+#     stop_words_list = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before", "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
+#     stop_words_dict = {}
+#     ps = PorterStemmer()
+#     for word in stop_words_list and len(word)>1:
+#             word = word.lower()
+#             word = ps.stem(word)
+#             if word not in stop_words_dict:
+#                 postings = Search().retrive(word)
+#                 stop_words_dict[word] = postings
+
+#     for word1 in stop_words_list and len(word1)>1:
+#         for word2 in stop_words_list and len(word2)>1:
+#             word1 = word1.lower()
+#             word1 = ps.stem(word1)
+#             word2 = word2.lower()
+#             word2 = ps.stem(word2)
+#             word = word1 + " " + word2
+#             if word not in stop_words_dict:
+#                 postings = Search().retrive(word)
+#                 stop_words_dict[word] = postings
+
+#     return stop_words_dict
