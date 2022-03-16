@@ -22,11 +22,10 @@ body {
 }
 
 #searchbarimage {
-    height: 30px;
-    padding: 0px 28px 10px 30px;
+    height: 48px;
+    padding: 8px 28px 8px 30px;
     cursor: pointer;
 }
-
 html, body {
     margin: 0;
     padding: 0;
